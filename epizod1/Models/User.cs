@@ -10,13 +10,13 @@ namespace epizod1.Models
         public string LastName { get; set; }
         public int Age { get; private set; }
         public bool isActive { get; private set; }
-
         public DateTime UpdateAt { get; private set; }
+        public decimal Funds { get; private set; }
 
         public User(string email, string password)
         {
-            Email = email;
-            Password = password;
+            SetEmail(email);
+            SetPassword(password);
         }
         public void SetEmail(string email ) {
             if (string.IsNullOrWhiteSpace(email)) {
@@ -65,6 +65,28 @@ namespace epizod1.Models
             }
             isActive = false;
             Update();
+        }
+
+        public void IncreaseFunds(decimal funds) {
+            if (funds < 0) {
+                throw new Exception("Kwota funduszy musi być większa niż 0");
+            }
+            Funds = funds;
+            Update();
+        }
+
+        public void PurchaseOrder(Order order) {
+            if (!isActive) {
+                throw new Exception("Tylko aktywni użytkownicy mogą dokonywać zamówień");
+            }
+            decimal orderPrice = order.TotalPrice;
+            
+            if (Funds - order.Price < 0) {
+                throw new Exception("Brakuje ci wystarczającej kwoty do dokonania zakupu");
+            }
+            order.Purchase();
+            Funds -= orderPrice;
+            Update();        
         }
 
         private void Update() {
