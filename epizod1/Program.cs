@@ -9,7 +9,9 @@ namespace epizod1
         {
             Console.WriteLine("Hello World!");
 
+            Order order1 = new Order(1, 100);
             User user = new User("jan@wp.pl", "15");
+            Console.WriteLine(user.Email);
         }
     }
 }
